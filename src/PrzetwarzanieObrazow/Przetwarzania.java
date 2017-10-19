@@ -22,13 +22,13 @@ class Przetwarzania {
 		   POST: tablica pikleli o wartosciach zmienionych zgodnie z ponizszym wzorem */
 		ObrazPanel progowanie(ObrazPanel obrazek, int prog){
 			
-			for(int i=0; i<obrazek.wymx*3; i++){
+			for(int i=0; i<obrazek.wymx*3; i+=3){
 			      for (int j=0; j<obrazek.wymy; j++){
-				if(obrazek.obraz[i][j]<=((prog*odcieni)/100)){
-					obrazek.obraz[i][j]=0;
+				if((obrazek.obraz[i][j]+obrazek.obraz[i+1][j]+obrazek.obraz[i+2][j])/3<=((prog*odcieni)/100)){
+					obrazek.obraz[i][j]=obrazek.obraz[i+1][j]=obrazek.obraz[i+2][j]=0;
 				}
 				else
-					obrazek.obraz[i][j]=odcieni;	
+					obrazek.obraz[i][j]=obrazek.obraz[i+1][j]=obrazek.obraz[i+2][j]=odcieni;	
 			      }
 			  } 
 			return obrazek;
