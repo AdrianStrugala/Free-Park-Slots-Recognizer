@@ -2,10 +2,15 @@ package PrzetwarzanieObrazow;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -346,16 +351,7 @@ public class Windows {
 			}
 		});
 		
-		btnPoprogBieli.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				int prog = Integer.parseInt(JOptionPane.showInputDialog("Wprowadz wartosc progu z zakresu 0-100"));
-				przetwarzania.progowaniewh(tymczas, prog);
-				tymczas.zmien();
-		        g.drawImage(tymczas.image, 0, 0, w, h, null);
-		        label.setIcon(new ImageIcon(bi));
-			}
-		});
+		
 
 		/*
 		 * ZOOM
@@ -381,6 +377,8 @@ public class Windows {
 
 		        bi = new BufferedImage(tymczas.image.getWidth(null), tymczas.image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		        g = bi.createGraphics();
+		        
+		        
 		        g.drawImage(tymczas.image, 0, 0, w, h, null);
 		        label.setIcon(new ImageIcon(bi));
 			}
@@ -409,6 +407,80 @@ public class Windows {
 			}
 		});
 		
+		btnPoprogBieli.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+//				int prog = Integer.parseInt(JOptionPane.showInputDialog("Wprowadz wartosc progu z zakresu 0-100"));
+//				przetwarzania.progowaniewh(tymczas, prog);
+//				tymczas.zmien();
+//		        g.drawImage(tymczas.image, 0, 0, w, h, null);
+//		        label.setIcon(new ImageIcon(bi));
+				
+				przetwarzania.Czarnobialy(tymczas);
+				tymczas.zmien();
+
+				int[][] table = new int[w][h]; 
+				
+				  for (int x = 0; x <w ; x++) { 
+					    for (int y = 0; y < h; y++) { 
+					      // Find non-black pixels 
+					    	table[x][y] = tymczas.image.getRGB(x, y);
+					    }
+				  }
+				  
+			      PrintWriter zapis = null;
+				try {
+					zapis = new PrintWriter("pixele.txt");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				  for (int x = 0; x <w ; x++) { 
+					    for (int y = 0; y < h; y++) { 
+			      zapis.print(table[x][y]);
+					    }
+					    zapis.print("\n");
+				  }
+			     			      
+			      zapis.close();
+				
+				Vector<HoughLine> lines = new Vector<HoughLine>(); 
+                HoughTransform ht = new HoughTransform(tymczas.image);
+                lines = ht.getLines(20,0);
+                
+                
+                
+				try {
+					zapis = new PrintWriter("linie.txt");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					for (int y = 0; y < lines.size(); y++) { 
+						zapis.print("r: " + lines.get(y).r);
+						zapis.print(" score: " + lines.get(y).score);
+						zapis.print(" theta: " + lines.get(y).theta);
+						zapis.print(" x1: " + lines.get(y).x1);
+						zapis.print(" x2: " + lines.get(y).x2);
+						zapis.print(" y1: " + lines.get(y).y1);
+						zapis.print(" y2: " + lines.get(y).y2);
+					    zapis.print("\n");
+					}
+				  
+				  zapis.close();
+                
+			        g.drawImage(tymczas.image, 0, 0, w, h, null);
+			        label.setIcon(new ImageIcon(bi));
+					
+					
+				  for (int y = 0; y < lines.size(); y++) { 
+				  g.drawLine((int)lines.get(y).x1, (int)lines.get(y).y1, (int)lines.get(y).x2, (int)lines.get(y).y2);
+				  }
+				  
+				  
+                int i=3;
+			}
+		});
 		
 		//2 koncowe nawiasy
 	}
