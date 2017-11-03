@@ -3,17 +3,17 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/AbsoluteLayout.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacpp.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-android-arm.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-linux-x86.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-linux-x86_64.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-macosx-x86_64.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-windows-x86.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacv-windows-x86_64.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/javacpp-0.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/dist/lib/nio.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Adrian/Desktop/Complete_For_Show/processing-core.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacpp.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacpp-0.5.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-android-arm.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-linux-x86.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-windows-x86.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/javacv-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/nio.jar"/>
+	<classpathentry kind="lib" path="C:/Projects/IntroductionToComputer/lib/processing-core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
