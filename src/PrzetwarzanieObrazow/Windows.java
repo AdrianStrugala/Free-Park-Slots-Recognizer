@@ -6,6 +6,7 @@ import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -446,7 +447,11 @@ public class Windows {
 				zapis.close();
 
 				Vector<HoughLine> lines = new Vector<HoughLine>();
-				Vector<HoughLine> lines2 = new Vector<HoughLine>();
+				Vector<HoughLine> linesFiltered = new Vector<HoughLine>();
+				Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
+				Vector<HoughLine> linesVertical = new Vector<HoughLine>();
+				Vector<Point> przeciecia = new Vector <Point>();
+				
 				HoughTransform ht = new HoughTransform(tymczas.image);
 				lines = ht.getLines(20, 0);
 
@@ -456,24 +461,64 @@ public class Windows {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				//filtering
 				for (int y = 0; y < lines.size(); y++) {
 					if (lines.get(y).x1 >= 0 && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
-						lines2.add(lines.get(y));
+						linesFiltered.add(lines.get(y));
+					}
+				}
+					//get Horizontal
+					for (int y = 0; y < linesFiltered.size(); y++) {
+						if (linesFiltered.get(y).x1 == 0 || linesFiltered.get(y).x2 == 0 ) {
+							linesHorizontal.add(linesFiltered.get(y));
+						}
+
+				}
+					//get vertical
+					for (HoughLine line : lines){
+						if (line.y1 == 0 || line.y2 == 0 ) {
+							linesVertical.add(line);
+						}
 					}
 
-				}
+//przecieia
 
-				for (int y = 0; y < lines2.size(); y++) {
-					zapis.print("r: " + lines2.get(y).r);
-					zapis.print(" score: " + lines2.get(y).score);
-					zapis.print(" theta: " + lines2.get(y).theta);
-					zapis.print(" x1: " + lines2.get(y).x1);
-					zapis.print(" x2: " + lines2.get(y).x2);
-					zapis.print(" y1: " + lines2.get(y).y1);
-					zapis.print(" y2: " + lines2.get(y).y2);
+					for (HoughLine vertical : linesVertical){
+						for(HoughLine horizontal : linesHorizontal){
+					
+							Point przeciecie = lineIntersect(vertical.x1, vertical.y1, vertical.x2, vertical.y2, horizontal.x1, horizontal.y1, horizontal.x2, horizontal.y2);					
+							przeciecia.add(przeciecie);
+					
+					}
+					}
+					
+					
+					try {
+					zapis = new PrintWriter("przeciecia.txt");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					for(Point przeciecie : przeciecia){
+					zapis.print(przeciecie.x + " " + przeciecie.y);
+					zapis.print("\n");
+					}
+			
+					zapis.close();
+					
+					
+				for (int y = 0; y < linesFiltered.size(); y++) {
+					zapis.print("r: " + linesFiltered.get(y).r);
+					zapis.print(" score: " + linesFiltered.get(y).score);
+					zapis.print(" theta: " + linesFiltered.get(y).theta);
+					zapis.print(" x1: " + linesFiltered.get(y).x1);
+					zapis.print(" x2: " + linesFiltered.get(y).x2);
+					zapis.print(" y1: " + linesFiltered.get(y).y1);
+					zapis.print(" y2: " + linesFiltered.get(y).y2);
 					zapis.print("\n");
 				}
-
+				
 				zapis.close();
 
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
@@ -481,15 +526,50 @@ public class Windows {
 
 				g.setColor(Color.RED);
 
-				for (int y = 0; y < lines2.size(); y++) {
-					g.drawLine((int) lines2.get(y).x1, (int) lines2.get(y).y1, (int) lines2.get(y).x2,
-							(int) lines2.get(y).y2);
+				for (int y = 0; y < linesFiltered.size(); y++) {
+					g.drawLine((int) linesFiltered.get(y).x1, (int) linesFiltered.get(y).y1, (int) linesFiltered.get(y).x2,
+							(int) linesFiltered.get(y).y2);
 				}
+				
+				g.setColor(Color.GREEN);
+				for(Point przeciecie : przeciecia){
+					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
+				}
+				
+				
+//				for (int y = 0; y < linesVertical.size(); y++) {
+//					g.drawLine((int) linesVertical.get(y).x1, (int) linesVertical.get(y).y1, (int) linesVertical.get(y).x2,
+//							(int) linesVertical.get(y).y2);
+//				}
 
+
+				
+				
+
+				
+				
 				int i = 3;
 			}
 		});
 
+
 		// 2 koncowe nawiasy
 	}
+	
+	   public static Point lineIntersect(float x1, float y1, float x2, float y2, float x12, float y12, float x22, float y22) {
+		   double denom = (y22 - y12) * (x2 - x1) - (x22 - x12) * (y2 - y1);
+		   if (denom == 0.0) { // Lines are parallel.
+		      return new Point(0,0);
+		   }
+		   double ua = ((x22 - x12) * (y1 - y12) - (y22 - y12) * (x1 - x12))/denom;
+		   double ub = ((x2 - x1) * (y1 - y12) - (y2 - y1) * (x1 - x12))/denom;
+		     if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+		         // Get the intersection point.
+		         return new Point((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
+		     }
+
+		   return new Point(0,0);
+		   }
+	
+	
 }
