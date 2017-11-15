@@ -43,6 +43,13 @@ public class Windows {
 	public int x0 = 0; // do przesuwania
 	public int y0 = 0; // do przesuwania
 
+	// DO PARKINGU
+	Vector<HoughLine> lines = new Vector<HoughLine>();
+	Vector<HoughLine> linesFiltered = new Vector<HoughLine>();
+	Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
+	Vector<HoughLine> linesVertical = new Vector<HoughLine>();
+	Vector<Point> przeciecia = new Vector<Point>();
+
 	/*
 	 * Uruchomienie aplikacji
 	 */
@@ -71,7 +78,7 @@ public class Windows {
 	 */
 	private void initialize() {
 		frmZajebistyProgramGraficzny = new JFrame();
-		frmZajebistyProgramGraficzny.setTitle("Program graficzny v.2.0");
+		frmZajebistyProgramGraficzny.setTitle("Znajdowanie wolnych miejsc parkingowych v.0.1.3");
 		frmZajebistyProgramGraficzny.setBounds(100, 100, 408, 539);
 		frmZajebistyProgramGraficzny.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmZajebistyProgramGraficzny.getContentPane().setLayout(null);
@@ -98,7 +105,7 @@ public class Windows {
 
 		JButton btnNegatyw = new JButton("Negatyw");
 
-		btnNegatyw.setBounds(52, 140, 129, 29);
+		btnNegatyw.setBounds(10, 141, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnNegatyw);
 
 		JLabel label = new JLabel("");
@@ -107,8 +114,8 @@ public class Windows {
 		frmZajebistyProgramGraficzny.getContentPane().add(label);
 
 		JLabel lblOperacjeNaObrazie = new JLabel("Operacje na obrazie:");
-		lblOperacjeNaObrazie.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblOperacjeNaObrazie.setBounds(52, 115, 147, 23);
+		lblOperacjeNaObrazie.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblOperacjeNaObrazie.setBounds(10, 117, 129, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(lblOperacjeNaObrazie);
 
 		JLabel lblNazwa = new JLabel("");
@@ -117,7 +124,7 @@ public class Windows {
 
 		JButton btnProgowanie = new JButton("Progowanie");
 
-		btnProgowanie.setBounds(52, 180, 129, 29);
+		btnProgowanie.setBounds(10, 180, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnProgowanie);
 
 		JButton btnReset = new JButton("Reset");
@@ -126,40 +133,55 @@ public class Windows {
 		btnReset.setBounds(10, 81, 89, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnReset);
 
-		JButton btnKontur = new JButton("Konturowanie");
+		JButton btnKontur = new JButton("Kontur");
 
-		btnKontur.setBounds(52, 220, 129, 29);
+		btnKontur.setBounds(10, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnKontur);
 
-		JButton btnCzarnobiay = new JButton("Czarno-Bia\u0142y");
+		JButton btnCzarnobiay = new JButton("Szarość");
 
-		btnCzarnobiay.setBounds(52, 260, 129, 29);
+		btnCzarnobiay.setBounds(10, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnCzarnobiay);
 
-		JButton btnPoprogBieli = new JButton("P\u00F3\u0142prog. bieli");
+		JButton btnPoprogBieli = new JButton("Pół. bieli");
 
-		btnPoprogBieli.setBounds(52, 460, 129, 29);
+		btnPoprogBieli.setBounds(10, 463, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPoprogBieli);
 
-		JButton btnKorGamma = new JButton("Kor. gamma");
+		JButton btnKorGamma = new JButton("Gamma");
 
-		btnKorGamma.setBounds(52, 380, 129, 29);
+		btnKorGamma.setBounds(10, 382, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnKorGamma);
 
-		JButton btnRozmywanie = new JButton("Rozmywanie");
+		JButton btnRozmywanie = new JButton("Rozmyj");
 
-		btnRozmywanie.setBounds(52, 340, 129, 29);
+		btnRozmywanie.setBounds(10, 340, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnRozmywanie);
 
-		JButton btnRozHistogramu = new JButton("Roz. histogramu");
+		JButton btnRozHistogramu = new JButton("Histogram");
 
-		btnRozHistogramu.setBounds(52, 300, 129, 29);
+		btnRozHistogramu.setBounds(10, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnRozHistogramu);
 
-		JButton btnPprogCzerni = new JButton("P\u00F3\u0142prog. czerni");
+		JButton btnPprogCzerni = new JButton("Pół. czerni");
 
-		btnPprogCzerni.setBounds(52, 420, 129, 29);
+		btnPprogCzerni.setBounds(10, 424, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPprogCzerni);
+
+		JButton btnConvert = new JButton("Konwersja");
+
+		btnConvert.setBounds(119, 141, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnConvert);
+
+		JButton btnHough = new JButton("Hough");
+
+		btnHough.setBounds(119, 180, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnHough);
+
+		JButton btnPunkty = new JButton("Punkty");
+
+		btnPunkty.setBounds(119, 218, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnPunkty);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
 
@@ -408,18 +430,37 @@ public class Windows {
 		btnPoprogBieli.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// int prog =
-				// Integer.parseInt(JOptionPane.showInputDialog("Wprowadz
-				// wartosc progu z zakresu 0-100"));
-				// przetwarzania.progowaniewh(tymczas, prog);
-				// tymczas.zmien();
-				// g.drawImage(tymczas.image, 0, 0, w, h, null);
-				// label.setIcon(new ImageIcon(bi));
+				int prog = Integer.parseInt(JOptionPane.showInputDialog("Wprowadz wartosc progu z zakresu 0-100"));
+				przetwarzania.progowaniewh(tymczas, prog);
+				tymczas.zmien();
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+
+				// for (int y = 0; y < linesVertical.size(); y++) {
+				// g.drawLine((int) linesVertical.get(y).x1, (int)
+				// linesVertical.get(y).y1, (int) linesVertical.get(y).x2,
+				// (int) linesVertical.get(y).y2);
+				// }
+
+			}
+		});
+
+		btnConvert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 
 				przetwarzania.kontur(tymczas);
 				przetwarzania.progowanie(tymczas, 90);
 				przetwarzania.negatyw(tymczas);
 				tymczas.zmien();
+
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+
+			}
+		});
+
+		btnHough.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 
 				int[][] table = new int[w][h];
 
@@ -446,14 +487,15 @@ public class Windows {
 
 				zapis.close();
 
-				Vector<HoughLine> lines = new Vector<HoughLine>();
-				Vector<HoughLine> linesFiltered = new Vector<HoughLine>();
-				Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
-				Vector<HoughLine> linesVertical = new Vector<HoughLine>();
-				Vector<Point> przeciecia = new Vector <Point>();
-				
 				HoughTransform ht = new HoughTransform(tymczas.image);
 				lines = ht.getLines(20, 0);
+
+				// filtering
+				for (int y = 0; y < lines.size(); y++) {
+					if (lines.get(y).x1 >= 0 && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
+						linesFiltered.add(lines.get(y));
+					}
+				}
 
 				try {
 					zapis = new PrintWriter("linie.txt");
@@ -461,53 +503,7 @@ public class Windows {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-				//filtering
-				for (int y = 0; y < lines.size(); y++) {
-					if (lines.get(y).x1 >= 0 && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
-						linesFiltered.add(lines.get(y));
-					}
-				}
-					//get Horizontal
-					for (int y = 0; y < linesFiltered.size(); y++) {
-						if (linesFiltered.get(y).x1 == 0 || linesFiltered.get(y).x2 == 0 ) {
-							linesHorizontal.add(linesFiltered.get(y));
-						}
 
-				}
-					//get vertical
-					for (HoughLine line : lines){
-						if (line.y1 == 0 || line.y2 == 0 ) {
-							linesVertical.add(line);
-						}
-					}
-
-//przecieia
-
-					for (HoughLine vertical : linesVertical){
-						for(HoughLine horizontal : linesHorizontal){
-					
-							Point przeciecie = lineIntersect(vertical.x1, vertical.y1, vertical.x2, vertical.y2, horizontal.x1, horizontal.y1, horizontal.x2, horizontal.y2);					
-							przeciecia.add(przeciecie);
-					
-					}
-					}
-					
-					
-					try {
-					zapis = new PrintWriter("przeciecia.txt");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-					for(Point przeciecie : przeciecia){
-					zapis.print(przeciecie.x + " " + przeciecie.y);
-					zapis.print("\n");
-					}
-			
-					zapis.close();
-					
-					
 				for (int y = 0; y < linesFiltered.size(); y++) {
 					zapis.print("r: " + linesFiltered.get(y).r);
 					zapis.print(" score: " + linesFiltered.get(y).score);
@@ -518,7 +514,7 @@ public class Windows {
 					zapis.print(" y2: " + linesFiltered.get(y).y2);
 					zapis.print("\n");
 				}
-				
+
 				zapis.close();
 
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
@@ -527,49 +523,84 @@ public class Windows {
 				g.setColor(Color.RED);
 
 				for (int y = 0; y < linesFiltered.size(); y++) {
-					g.drawLine((int) linesFiltered.get(y).x1, (int) linesFiltered.get(y).y1, (int) linesFiltered.get(y).x2,
-							(int) linesFiltered.get(y).y2);
+					g.drawLine((int) linesFiltered.get(y).x1, (int) linesFiltered.get(y).y1,
+							(int) linesFiltered.get(y).x2, (int) linesFiltered.get(y).y2);
 				}
-				
-				g.setColor(Color.GREEN);
-				for(Point przeciecie : przeciecia){
-					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
-				}
-				
-				
-//				for (int y = 0; y < linesVertical.size(); y++) {
-//					g.drawLine((int) linesVertical.get(y).x1, (int) linesVertical.get(y).y1, (int) linesVertical.get(y).x2,
-//							(int) linesVertical.get(y).y2);
-//				}
 
-
-				
-				
-
-				
-				
-				int i = 3;
 			}
 		});
 
+		btnPunkty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				// get Horizontal
+				for (int y = 0; y < linesFiltered.size(); y++) {
+					if (linesFiltered.get(y).x1 == 0 || linesFiltered.get(y).x2 == 0) {
+						linesHorizontal.add(linesFiltered.get(y));
+					}
+
+				}
+				// get vertical
+				for (HoughLine line : lines) {
+					if (line.y1 == 0 || line.y2 == 0) {
+						linesVertical.add(line);
+					}
+				}
+
+				// przecieia
+
+				for (HoughLine vertical : linesVertical) {
+					for (HoughLine horizontal : linesHorizontal) {
+
+						Point przeciecie = lineIntersect(vertical.x1, vertical.y1, vertical.x2, vertical.y2,
+								horizontal.x1, horizontal.y1, horizontal.x2, horizontal.y2);
+						przeciecia.add(przeciecie);
+
+					}
+				}
+
+				PrintWriter zapis = null;
+
+				try {
+					zapis = new PrintWriter("przeciecia.txt");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				for (Point przeciecie : przeciecia) {
+					zapis.print(przeciecie.x + " " + przeciecie.y);
+					zapis.print("\n");
+				}
+
+				zapis.close();
+
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+
+				g.setColor(Color.GREEN);
+				for (Point przeciecie : przeciecia) {
+					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
+				}
+
+			}
+		});
 
 		// 2 koncowe nawiasy
 	}
-	
-	   public static Point lineIntersect(float x1, float y1, float x2, float y2, float x12, float y12, float x22, float y22) {
-		   double denom = (y22 - y12) * (x2 - x1) - (x22 - x12) * (y2 - y1);
-		   if (denom == 0.0) { // Lines are parallel.
-		      return new Point(0,0);
-		   }
-		   double ua = ((x22 - x12) * (y1 - y12) - (y22 - y12) * (x1 - x12))/denom;
-		   double ub = ((x2 - x1) * (y1 - y12) - (y2 - y1) * (x1 - x12))/denom;
-		     if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
-		         // Get the intersection point.
-		         return new Point((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
-		     }
 
-		   return new Point(0,0);
-		   }
-	
-	
+	public static Point lineIntersect(float x1, float y1, float x2, float y2, float x12, float y12, float x22,
+			float y22) {
+		double denom = (y22 - y12) * (x2 - x1) - (x22 - x12) * (y2 - y1);
+		if (denom == 0.0) { // Lines are parallel.
+			return new Point(0, 0);
+		}
+		double ua = ((x22 - x12) * (y1 - y12) - (y22 - y12) * (x1 - x12)) / denom;
+		double ub = ((x2 - x1) * (y1 - y12) - (y2 - y1) * (x1 - x12)) / denom;
+		if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+			// Get the intersection point.
+			return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
+		}
+
+		return new Point(0, 0);
+	}
 }
