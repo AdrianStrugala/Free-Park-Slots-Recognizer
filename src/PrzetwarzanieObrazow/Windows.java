@@ -78,11 +78,7 @@ public class Windows {
 	 */
 	private void initialize() {
 		frmZajebistyProgramGraficzny = new JFrame();
-<<<<<<< HEAD
-		frmZajebistyProgramGraficzny.setTitle("Park slot recognizer");
-=======
-		frmZajebistyProgramGraficzny.setTitle("Znajdowanie wolnych miejsc parkingowych v.0.1.3");
->>>>>>> 1acb8e19b2fa1cab615be1d5cec69d87f65f90ce
+		frmZajebistyProgramGraficzny.setTitle("Park slot recognizer v.0.1.4");
 		frmZajebistyProgramGraficzny.setBounds(100, 100, 408, 539);
 		frmZajebistyProgramGraficzny.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmZajebistyProgramGraficzny.getContentPane().setLayout(null);
@@ -179,13 +175,18 @@ public class Windows {
 
 		JButton btnHough = new JButton("Hough");
 
-		btnHough.setBounds(119, 180, 100, 29);
+		btnHough.setBounds(119, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnHough);
 
 		JButton btnPunkty = new JButton("Punkty");
 
-		btnPunkty.setBounds(119, 218, 100, 29);
+		btnPunkty.setBounds(120, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPunkty);
+		
+		JButton btnPogrub = new JButton("Pogrub");
+
+		btnPogrub.setBounds(119, 180, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnPogrub);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
 
@@ -440,12 +441,6 @@ public class Windows {
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
 
-				// for (int y = 0; y < linesVertical.size(); y++) {
-				// g.drawLine((int) linesVertical.get(y).x1, (int)
-				// linesVertical.get(y).y1, (int) linesVertical.get(y).x2,
-				// (int) linesVertical.get(y).y2);
-				// }
-
 			}
 		});
 
@@ -589,6 +584,17 @@ public class Windows {
 			}
 		});
 
+		btnPogrub.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				przetwarzania.pogrub(tymczas);
+				tymczas.zmien();
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+				
+			}
+		});
+		
 		// 2 koncowe nawiasy
 	}
 

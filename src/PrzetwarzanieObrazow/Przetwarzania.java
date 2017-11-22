@@ -143,6 +143,19 @@ class Przetwarzania {
 			}
 			return obrazek;
 		}
+
+		ObrazPanel pogrub(ObrazPanel obrazek) {
+			for(int k=0;k<4;k++){
+			for(int i=0; i<(obrazek.wymx-1)*3; i++){
+				for (int j=0; j<obrazek.wymy-1; j++){
+						obrazek.obraz[i][j] += obrazek.obraz[i+3][j+1];
+						if(obrazek.obraz[i][j]>255)
+							obrazek.obraz[i][j] = 255; 
+				}
+			}
+			}
+			return obrazek;
+		}
 }	
 
 		
