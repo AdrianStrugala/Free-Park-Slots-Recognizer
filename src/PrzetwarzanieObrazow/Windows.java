@@ -71,7 +71,7 @@ public class Windows {
 	 */
 	private void initialize() {
 		frmZajebistyProgramGraficzny = new JFrame();
-		frmZajebistyProgramGraficzny.setTitle("Program graficzny v.2.0");
+		frmZajebistyProgramGraficzny.setTitle("Park slot recognizer");
 		frmZajebistyProgramGraficzny.setBounds(100, 100, 408, 539);
 		frmZajebistyProgramGraficzny.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmZajebistyProgramGraficzny.getContentPane().setLayout(null);
