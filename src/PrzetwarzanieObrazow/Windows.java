@@ -138,12 +138,12 @@ public class Windows {
 		btnKontur.setBounds(10, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnKontur);
 
-		JButton btnCzarnobiay = new JButton("Szarość");
+		JButton btnCzarnobiay = new JButton("Szarosci");
 
 		btnCzarnobiay.setBounds(10, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnCzarnobiay);
 
-		JButton btnPoprogBieli = new JButton("Pół. bieli");
+		JButton btnPoprogBieli = new JButton("Pol. bieli");
 
 		btnPoprogBieli.setBounds(10, 463, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPoprogBieli);
@@ -163,7 +163,7 @@ public class Windows {
 		btnRozHistogramu.setBounds(10, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnRozHistogramu);
 
-		JButton btnPprogCzerni = new JButton("Pół. czerni");
+		JButton btnPprogCzerni = new JButton("Pol. czerni");
 
 		btnPprogCzerni.setBounds(10, 424, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPprogCzerni);

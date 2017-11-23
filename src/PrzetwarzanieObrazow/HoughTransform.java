@@ -55,7 +55,7 @@ import java.util.Vector;
 
 public class HoughTransform extends Thread {
 	// The size of the neighbourhood in which to search for other local maxima
-	final int neighbourhoodSize = 44;
+	final int neighbourhoodSize = 70;
 
 	// How many discrete values of theta shall we check?
 	final int maxTheta = 180;
