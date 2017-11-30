@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -457,6 +458,17 @@ public class Windows {
 
 			}
 		});
+		
+		btnPogrub.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				przetwarzania.pogrub(tymczas);
+				tymczas.zmien();
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+				
+			}
+		});
 
 		btnHough.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -491,8 +503,9 @@ public class Windows {
 
 				// filtering
 				for (int y = 0; y < lines.size(); y++) {
-					if (lines.get(y).x1 >= 0 && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
-						linesFiltered.add(lines.get(y));
+					if (lines.get(y).x1 >= 0  && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
+						if(lines.get(y).x1 <1000 && lines.get(y).y1 <1000)
+							{linesFiltered.add(lines.get(y));}
 					}
 				}
 
@@ -531,7 +544,7 @@ public class Windows {
 
 		btnPunkty.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				
 				// get Horizontal
 				for (int y = 0; y < linesFiltered.size(); y++) {
 					if (linesFiltered.get(y).x1 == 0 || linesFiltered.get(y).x2 == 0) {
@@ -545,18 +558,116 @@ public class Windows {
 						linesVertical.add(line);
 					}
 				}
+				
+				
 
 				// przecieia
+				
+//				Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())];
+//				
+//				for(int i=0;i<prostokaty.length;i++){
+//					prostokaty[i] = new Rectangle();
+//				}
+//
+//				for (int i=0; i<linesHorizontal.size(); i++) {
+//					for (int j=0; j<linesVertical.size(); j++)  {
+//						
+//
+//						Point przeciecie = lineIntersect(linesVertical.get(j).x1, linesVertical.get(j).y1, linesVertical.get(j).x2, linesVertical.get(j).y2,
+//								linesHorizontal.get(i).x1, linesHorizontal.get(i).y1, linesHorizontal.get(i).x2, linesHorizontal.get(i).y2);
+//						przeciecia.add(przeciecie);
+//											
+//						int interator = (j+1)*(i+1)-1;
+//						int iteratorProstokataNaDole = (j+1)*(i)-1;
+//						
+//						prostokaty[interator].x1=przeciecie.getX();
+//						prostokaty[interator].y1=przeciecie.getY();
+//						
+//						if(j>0){	
+//							prostokaty[interator-1].x2=przeciecie.getX();
+//							prostokaty[interator-1].y2=przeciecie.getY();
+//							
+//						}
+//							
+//						if(i>0){
+//								prostokaty[iteratorProstokataNaDole].x1=przeciecie.getX();
+//								prostokaty[iteratorProstokataNaDole].y1=przeciecie.getY();
+//												
+//						}
+//						
+//						if(j>0 && i>0){
+//							prostokaty[iteratorProstokataNaDole].x2=przeciecie.getX();
+//							prostokaty[iteratorProstokataNaDole].y2=przeciecie.getY();
+//						}
+//						
+//						
+//					}
+//				}
+				
+				Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())];
+				
+				for(int i=0;i<prostokaty.length;i++){
+					prostokaty[i] = new Rectangle();
+				}
 
-				for (HoughLine vertical : linesVertical) {
-					for (HoughLine horizontal : linesHorizontal) {
+				for (int i=0; i<linesHorizontal.size(); i++) {
+					for (int j=0; j<linesVertical.size(); j++)  {
+						
 
-						Point przeciecie = lineIntersect(vertical.x1, vertical.y1, vertical.x2, vertical.y2,
-								horizontal.x1, horizontal.y1, horizontal.x2, horizontal.y2);
-						przeciecia.add(przeciecie);
-
+						Point przeciecie = lineIntersect(linesVertical.get(j).x1, linesVertical.get(j).y1, linesVertical.get(j).x2, linesVertical.get(j).y2,
+								linesHorizontal.get(i).x1, linesHorizontal.get(i).y1, linesHorizontal.get(i).x2, linesHorizontal.get(i).y2);
+						
+						if(przeciecie.getX() > 0 && przeciecie.getX() <1000 ){
+							przeciecia.add(przeciecie);
+							
+						}
+						
+						
+						lblNazwa.setText(linesHorizontal.size() + " " + linesVertical.size());	
+						
 					}
 				}
+				
+				przeciecia = sort(przeciecia);
+				
+				for (int i=0; i<8; i++) {
+					for (int j=0; j<14; j++)  {
+						
+					
+						int interator = (j)+(i*14);
+						int iteratorProstokataNaDole = (j)+((i-1)*14);
+						
+						Point przeciecie = przeciecia.get(interator);
+						
+						prostokaty[interator].x1=przeciecie.getX();
+						prostokaty[interator].y1=przeciecie.getY();
+						
+						if(j>0){	
+							prostokaty[interator-1].x2=przeciecie.getX();
+							prostokaty[interator-1].y2=przeciecie.getY();
+							
+						}
+							
+						if(i>0){
+								prostokaty[iteratorProstokataNaDole].x3=przeciecie.getX();
+								prostokaty[iteratorProstokataNaDole].y3=przeciecie.getY();
+												
+						}
+						
+						if(j>0 && i>0){
+							prostokaty[iteratorProstokataNaDole-1].x4=przeciecie.getX();
+							prostokaty[iteratorProstokataNaDole-1].y4=przeciecie.getY();
+						}
+						
+					}
+				}
+				
+				Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
+		        for (int i = 0; i < prostokaty.length; i++) {
+		        	
+		        	if(prostokaty[i].x1> 0 && prostokaty[i].x2> 0 && prostokaty[i].x3> 0 && prostokaty[i].x4> 0 )		        	
+		        	prostokatyVec.add(prostokaty[i]);
+		        }
 
 				PrintWriter zapis = null;
 
@@ -572,6 +683,9 @@ public class Windows {
 				}
 
 				zapis.close();
+				
+					//System.out.println(sort(przeciecia));
+			
 
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
@@ -580,20 +694,23 @@ public class Windows {
 				for (Point przeciecie : przeciecia) {
 					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
 				}
+				
+				g.setColor(Color.MAGENTA);
+				for (Rectangle prostokat : prostokatyVec) {
+					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
+					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
+					g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
+					g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
+				}
+//				g.drawLine((int) prostokaty[2].x1, (int) prostokaty[2].y1, (int) prostokaty[2].x2, (int) prostokaty[2].y2);
+//				g.drawLine((int) prostokaty[2].x1, (int) prostokaty[2].y1, (int) prostokaty[2].x3, (int) prostokaty[2].y3);
+//				g.drawLine((int) prostokaty[2].x2, (int) prostokaty[2].y2, (int) prostokaty[2].x4, (int) prostokaty[2].y4);
+//				g.drawLine((int) prostokaty[2].x4, (int) prostokaty[2].y4, (int) prostokaty[2].x3, (int) prostokaty[2].y3);
 
 			}
 		});
 
-		btnPogrub.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				przetwarzania.pogrub(tymczas);
-				tymczas.zmien();
-				g.drawImage(tymczas.image, 0, 0, w, h, null);
-				label.setIcon(new ImageIcon(bi));
-				
-			}
-		});
+
 		
 		// 2 koncowe nawiasy
 	}
@@ -613,4 +730,35 @@ public class Windows {
 
 		return new Point(0, 0);
 	}
+
+	public static Vector<Point> sort(Vector<Point> c) {
+        Vector<Point> p = new Vector<Point>();
+        Point[] ppoints = c.toArray(new Point[c.size()]);
+        Point temp;
+        int zmiana = 1;
+        while (zmiana > 0) {
+            zmiana = 0;
+            for (int i = 0; i < ppoints.length - 1; i++) {
+                if (ppoints[i].getY() > ppoints[i + 1].getY()) {
+                    temp = ppoints[i + 1];
+                    ppoints[i + 1] = ppoints[i];
+                    ppoints[i] = temp;
+                    zmiana++;
+                }
+                else if(ppoints[i].getY() == ppoints[i + 1].getY()&& ppoints[i].getX() > ppoints[i + 1].getX())
+                {
+                    temp = ppoints[i + 1];
+                    ppoints[i + 1] = ppoints[i];
+                    ppoints[i] = temp;
+                    zmiana++;
+                }
+            }
+        }
+        for (int i = 0; i < ppoints.length; i++) {
+            p.add(ppoints[i]);
+        }
+ 
+        return p;
+ 
+    }
 }
