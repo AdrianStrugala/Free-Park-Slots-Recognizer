@@ -31,6 +31,7 @@ public class Windows {
 
 	JFrame frmZajebistyProgramGraficzny;
 	static Przetwarzania przetwarzania = new Przetwarzania();
+	static Parking parking = new Parking();
 	static ObrazPanel obraz; // plik obrazu
 	static ObrazPanel tymczas; // plik obrazu tymczasowego
 	String nazwa; // nazwa wybranego pliku
@@ -45,11 +46,12 @@ public class Windows {
 	public int y0 = 0; // do przesuwania
 
 	// DO PARKINGU
-	Vector<HoughLine> lines = new Vector<HoughLine>();
-	Vector<HoughLine> linesFiltered = new Vector<HoughLine>();
+	Vector<HoughLine> houghLines = new Vector<HoughLine>();
 	Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
 	Vector<HoughLine> linesVertical = new Vector<HoughLine>();
 	Vector<Point> przeciecia = new Vector<Point>();
+	Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
+	
 
 	/*
 	 * Uruchomienie aplikacji
@@ -88,29 +90,24 @@ public class Windows {
 		btnWczytaj.setForeground(Color.ORANGE);
 		btnWczytaj.setBackground(Color.RED);
 		btnWczytaj.setFont(new Font("Tahoma", Font.BOLD, 11));
-
 		btnWczytaj.setBounds(10, 11, 89, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnWczytaj);
 
 		JButton btnZapisz = new JButton("Zapisz");
-
 		btnZapisz.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnZapisz.setBounds(10, 45, 89, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnZapisz);
 
 		JButton btnZapiszJako = new JButton("Zapisz jako...");
 		btnZapiszJako.setFont(new Font("Tahoma", Font.BOLD, 11));
-
 		btnZapiszJako.setBounds(109, 45, 110, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnZapiszJako);
 
 		JButton btnNegatyw = new JButton("Negatyw");
-
 		btnNegatyw.setBounds(10, 141, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnNegatyw);
 
 		JLabel label = new JLabel("");
-
 		label.setBounds(229, 11, 147, 226);
 		frmZajebistyProgramGraficzny.getContentPane().add(label);
 
@@ -124,70 +121,61 @@ public class Windows {
 		frmZajebistyProgramGraficzny.getContentPane().add(lblNazwa);
 
 		JButton btnProgowanie = new JButton("Progowanie");
-
 		btnProgowanie.setBounds(10, 180, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnProgowanie);
 
 		JButton btnReset = new JButton("Reset");
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 11));
-
 		btnReset.setBounds(10, 81, 89, 23);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnReset);
 
 		JButton btnKontur = new JButton("Kontur");
-
 		btnKontur.setBounds(10, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnKontur);
 
 		JButton btnCzarnobiay = new JButton("Szarosci");
-
 		btnCzarnobiay.setBounds(10, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnCzarnobiay);
 
 		JButton btnPoprogBieli = new JButton("Pol. bieli");
-
 		btnPoprogBieli.setBounds(10, 463, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPoprogBieli);
 
 		JButton btnKorGamma = new JButton("Gamma");
-
 		btnKorGamma.setBounds(10, 382, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnKorGamma);
 
 		JButton btnRozmywanie = new JButton("Rozmyj");
-
 		btnRozmywanie.setBounds(10, 340, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnRozmywanie);
 
 		JButton btnRozHistogramu = new JButton("Histogram");
-
 		btnRozHistogramu.setBounds(10, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnRozHistogramu);
 
 		JButton btnPprogCzerni = new JButton("Pol. czerni");
-
 		btnPprogCzerni.setBounds(10, 424, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPprogCzerni);
 
 		JButton btnConvert = new JButton("Konwersja");
-
 		btnConvert.setBounds(119, 141, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnConvert);
 
 		JButton btnHough = new JButton("Hough");
-
 		btnHough.setBounds(119, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnHough);
 
 		JButton btnPunkty = new JButton("Punkty");
-
 		btnPunkty.setBounds(120, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPunkty);
 		
 		JButton btnPogrub = new JButton("Pogrub");
-
 		btnPogrub.setBounds(119, 180, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPogrub);
+		
+		JButton btnProstokaty = new JButton("Prostokaty");
+		btnProstokaty.setBounds(119, 298, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnProstokaty);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
 
@@ -312,6 +300,9 @@ public class Windows {
 			}
 		});
 
+		/*
+		 * KONTUR
+		 */
 		btnKontur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -322,6 +313,9 @@ public class Windows {
 			}
 		});
 
+		/*
+		 * CZARNO BIALY
+		 */
 		btnCzarnobiay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -332,6 +326,9 @@ public class Windows {
 
 			}
 		});
+		/*
+		 * ROZCIAGNIECIE HISTOGRAMU
+		 */
 
 		btnRozHistogramu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -343,6 +340,10 @@ public class Windows {
 
 			}
 		});
+		
+		/*
+		 * ROZMYWANIE
+		 */
 
 		btnRozmywanie.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -354,7 +355,9 @@ public class Windows {
 
 			}
 		});
-
+		/*
+		 * KOREKTA GAMMA
+		 */
 		btnKorGamma.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -368,7 +371,9 @@ public class Windows {
 
 			}
 		});
-
+		/*
+		 * POLPROGOWANIE CZERNI
+		 */
 		btnPprogCzerni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -432,7 +437,9 @@ public class Windows {
 				label.setIcon(new ImageIcon(bi));
 			}
 		});
-
+		/*
+		 * POLPROGOWANIE BIELI
+		 */
 		btnPoprogBieli.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -444,7 +451,13 @@ public class Windows {
 
 			}
 		});
-
+		
+		/*********************************************************************/
+		/*************************PARKING*************************************/
+		/*********************************************************************/
+		/*
+		 * PRZYGOTOWANIE DO HOGHA
+		 */
 		btnConvert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -458,7 +471,9 @@ public class Windows {
 
 			}
 		});
-		
+		/*
+		 * POGRUBIENIE
+		 */
 		btnPogrub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -469,74 +484,27 @@ public class Windows {
 				
 			}
 		});
-
+		
+		/*
+		 * HOUGH
+		 */
 		btnHough.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				int[][] table = new int[w][h];
-
-				for (int x = 0; x < w; x++) {
-					for (int y = 0; y < h; y++) {
-						// Find non-black pixels
-						table[x][y] = tymczas.image.getRGB(x, y);
-					}
-				}
-
-				PrintWriter zapis = null;
-				try {
-					zapis = new PrintWriter("pixele.txt");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				for (int x = 0; x < w; x++) {
-					for (int y = 0; y < h; y++) {
-						zapis.print(table[x][y]);
-					}
-					zapis.print("\n");
-				}
-
-				zapis.close();
-
-				HoughTransform ht = new HoughTransform(tymczas.image);
-				lines = ht.getLines(20, 0);
-
-				// filtering
-				for (int y = 0; y < lines.size(); y++) {
-					if (lines.get(y).x1 >= 0  && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
-						if(lines.get(y).x1 <1000 && lines.get(y).y1 <1000)
-							{linesFiltered.add(lines.get(y));}
-					}
-				}
-
-				try {
-					zapis = new PrintWriter("linie.txt");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				for (int y = 0; y < linesFiltered.size(); y++) {
-					zapis.print("r: " + linesFiltered.get(y).r);
-					zapis.print(" score: " + linesFiltered.get(y).score);
-					zapis.print(" theta: " + linesFiltered.get(y).theta);
-					zapis.print(" x1: " + linesFiltered.get(y).x1);
-					zapis.print(" x2: " + linesFiltered.get(y).x2);
-					zapis.print(" y1: " + linesFiltered.get(y).y1);
-					zapis.print(" y2: " + linesFiltered.get(y).y2);
-					zapis.print("\n");
-				}
-
-				zapis.close();
-
+				parking.writePixels(w, h, tymczas);
+				
+				houghLines = parking.linie(w, h, tymczas);
+			
+				parking.writeLines(houghLines);
+				
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
 
 				g.setColor(Color.RED);
 
-				for (int y = 0; y < linesFiltered.size(); y++) {
-					g.drawLine((int) linesFiltered.get(y).x1, (int) linesFiltered.get(y).y1,
-							(int) linesFiltered.get(y).x2, (int) linesFiltered.get(y).y2);
+				for (int y = 0; y < houghLines.size(); y++) {
+					g.drawLine((int) houghLines.get(y).x1, (int) houghLines.get(y).y1,
+							(int) houghLines.get(y).x2, (int) houghLines.get(y).y2);
 				}
 
 			}
@@ -546,147 +514,24 @@ public class Windows {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				// get Horizontal
-				for (int y = 0; y < linesFiltered.size(); y++) {
-					if (linesFiltered.get(y).x1 == 0 || linesFiltered.get(y).x2 == 0) {
-						linesHorizontal.add(linesFiltered.get(y));
+				for (int y = 0; y < houghLines.size(); y++) {
+					if (houghLines.get(y).x1 == 0 || houghLines.get(y).x2 == 0) {
+						linesHorizontal.add(houghLines.get(y));
 					}
 
 				}
+				
 				// get vertical
-				for (HoughLine line : lines) {
+				for (HoughLine line : houghLines) {
 					if (line.y1 == 0 || line.y2 == 0) {
 						linesVertical.add(line);
 					}
 				}
 				
-				
-
-				// przecieia
-				
-//				Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())];
-//				
-//				for(int i=0;i<prostokaty.length;i++){
-//					prostokaty[i] = new Rectangle();
-//				}
-//
-//				for (int i=0; i<linesHorizontal.size(); i++) {
-//					for (int j=0; j<linesVertical.size(); j++)  {
-//						
-//
-//						Point przeciecie = lineIntersect(linesVertical.get(j).x1, linesVertical.get(j).y1, linesVertical.get(j).x2, linesVertical.get(j).y2,
-//								linesHorizontal.get(i).x1, linesHorizontal.get(i).y1, linesHorizontal.get(i).x2, linesHorizontal.get(i).y2);
-//						przeciecia.add(przeciecie);
-//											
-//						int interator = (j+1)*(i+1)-1;
-//						int iteratorProstokataNaDole = (j+1)*(i)-1;
-//						
-//						prostokaty[interator].x1=przeciecie.getX();
-//						prostokaty[interator].y1=przeciecie.getY();
-//						
-//						if(j>0){	
-//							prostokaty[interator-1].x2=przeciecie.getX();
-//							prostokaty[interator-1].y2=przeciecie.getY();
-//							
-//						}
-//							
-//						if(i>0){
-//								prostokaty[iteratorProstokataNaDole].x1=przeciecie.getX();
-//								prostokaty[iteratorProstokataNaDole].y1=przeciecie.getY();
-//												
-//						}
-//						
-//						if(j>0 && i>0){
-//							prostokaty[iteratorProstokataNaDole].x2=przeciecie.getX();
-//							prostokaty[iteratorProstokataNaDole].y2=przeciecie.getY();
-//						}
-//						
-//						
-//					}
-//				}
-				
-				Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())];
-				
-				for(int i=0;i<prostokaty.length;i++){
-					prostokaty[i] = new Rectangle();
-				}
-
-				for (int i=0; i<linesHorizontal.size(); i++) {
-					for (int j=0; j<linesVertical.size(); j++)  {
-						
-
-						Point przeciecie = lineIntersect(linesVertical.get(j).x1, linesVertical.get(j).y1, linesVertical.get(j).x2, linesVertical.get(j).y2,
-								linesHorizontal.get(i).x1, linesHorizontal.get(i).y1, linesHorizontal.get(i).x2, linesHorizontal.get(i).y2);
-						
-						if(przeciecie.getX() > 0 && przeciecie.getX() <1000 ){
-							przeciecia.add(przeciecie);
-							
-						}
-						
-						
-						lblNazwa.setText(linesHorizontal.size() + " " + linesVertical.size());	
-						
-					}
-				}
-				
-				przeciecia = sort(przeciecia);
-				
-				for (int i=0; i<8; i++) {
-					for (int j=0; j<14; j++)  {
-						
-					
-						int interator = (j)+(i*14);
-						int iteratorProstokataNaDole = (j)+((i-1)*14);
-						
-						Point przeciecie = przeciecia.get(interator);
-						
-						prostokaty[interator].x1=przeciecie.getX();
-						prostokaty[interator].y1=przeciecie.getY();
-						
-						if(j>0){	
-							prostokaty[interator-1].x2=przeciecie.getX();
-							prostokaty[interator-1].y2=przeciecie.getY();
-							
-						}
-							
-						if(i>0){
-								prostokaty[iteratorProstokataNaDole].x3=przeciecie.getX();
-								prostokaty[iteratorProstokataNaDole].y3=przeciecie.getY();
-												
-						}
-						
-						if(j>0 && i>0){
-							prostokaty[iteratorProstokataNaDole-1].x4=przeciecie.getX();
-							prostokaty[iteratorProstokataNaDole-1].y4=przeciecie.getY();
-						}
-						
-					}
-				}
-				
-				Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
-		        for (int i = 0; i < prostokaty.length; i++) {
-		        	
-		        	if(prostokaty[i].x1> 0 && prostokaty[i].x2> 0 && prostokaty[i].x3> 0 && prostokaty[i].x4> 0 )		        	
-		        	prostokatyVec.add(prostokaty[i]);
-		        }
-
-				PrintWriter zapis = null;
-
-				try {
-					zapis = new PrintWriter("przeciecia.txt");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				for (Point przeciecie : przeciecia) {
-					zapis.print(przeciecie.x + " " + przeciecie.y);
-					zapis.print("\n");
-				}
-
-				zapis.close();
-				
-					//System.out.println(sort(przeciecia));
+				przeciecia = parking.przeciecia(linesHorizontal, linesVertical);
+	
+				parking.writePrzeciecia(przeciecia);			
 			
-
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
 
@@ -694,6 +539,18 @@ public class Windows {
 				for (Point przeciecie : przeciecia) {
 					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
 				}
+				
+
+			}
+		});
+
+		btnProstokaty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+						
+				prostokatyVec = parking.prostokaty(linesHorizontal, linesVertical, przeciecia);
+		        
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
 				
 				g.setColor(Color.MAGENTA);
 				for (Rectangle prostokat : prostokatyVec) {
@@ -709,56 +566,7 @@ public class Windows {
 
 			}
 		});
-
-
 		
 		// 2 koncowe nawiasy
 	}
-
-	public static Point lineIntersect(float x1, float y1, float x2, float y2, float x12, float y12, float x22,
-			float y22) {
-		double denom = (y22 - y12) * (x2 - x1) - (x22 - x12) * (y2 - y1);
-		if (denom == 0.0) { // Lines are parallel.
-			return new Point(0, 0);
-		}
-		double ua = ((x22 - x12) * (y1 - y12) - (y22 - y12) * (x1 - x12)) / denom;
-		double ub = ((x2 - x1) * (y1 - y12) - (y2 - y1) * (x1 - x12)) / denom;
-		if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
-			// Get the intersection point.
-			return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
-		}
-
-		return new Point(0, 0);
-	}
-
-	public static Vector<Point> sort(Vector<Point> c) {
-        Vector<Point> p = new Vector<Point>();
-        Point[] ppoints = c.toArray(new Point[c.size()]);
-        Point temp;
-        int zmiana = 1;
-        while (zmiana > 0) {
-            zmiana = 0;
-            for (int i = 0; i < ppoints.length - 1; i++) {
-                if (ppoints[i].getY() > ppoints[i + 1].getY()) {
-                    temp = ppoints[i + 1];
-                    ppoints[i + 1] = ppoints[i];
-                    ppoints[i] = temp;
-                    zmiana++;
-                }
-                else if(ppoints[i].getY() == ppoints[i + 1].getY()&& ppoints[i].getX() > ppoints[i + 1].getX())
-                {
-                    temp = ppoints[i + 1];
-                    ppoints[i + 1] = ppoints[i];
-                    ppoints[i] = temp;
-                    zmiana++;
-                }
-            }
-        }
-        for (int i = 0; i < ppoints.length; i++) {
-            p.add(ppoints[i]);
-        }
- 
-        return p;
- 
-    }
 }
