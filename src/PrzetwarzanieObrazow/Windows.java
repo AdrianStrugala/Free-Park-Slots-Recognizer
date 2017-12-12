@@ -176,6 +176,10 @@ public class Windows {
 		JButton btnProstokaty = new JButton("Prostokaty");
 		btnProstokaty.setBounds(119, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnProstokaty);
+		
+		JButton btnParking = new JButton("Parking");
+		btnParking.setBounds(119, 340, 100, 29);
+		frmZajebistyProgramGraficzny.getContentPane().add(btnParking);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
 
@@ -553,6 +557,7 @@ public class Windows {
 				label.setIcon(new ImageIcon(bi));
 				
 				g.setColor(Color.MAGENTA);
+				
 				for (Rectangle prostokat : prostokatyVec) {
 					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
 					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
@@ -564,6 +569,34 @@ public class Windows {
 //				g.drawLine((int) prostokaty[2].x2, (int) prostokaty[2].y2, (int) prostokaty[2].x4, (int) prostokaty[2].y4);
 //				g.drawLine((int) prostokaty[2].x4, (int) prostokaty[2].y4, (int) prostokaty[2].x3, (int) prostokaty[2].y3);
 
+			}
+		});
+		
+		btnParking.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+				g.drawImage(tymczas.image, 0, 0, w, h, null);
+				label.setIcon(new ImageIcon(bi));
+				
+				
+				for(Rectangle prostokat : prostokatyVec){
+					
+					if(prostokat.pusty(tymczas)){		
+						g.setColor(Color.GREEN);
+					}
+
+					else{
+						g.setColor(Color.RED);	
+						}
+					
+					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
+					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
+					g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
+					g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
+					
+				}
+				
+				
 			}
 		});
 		
