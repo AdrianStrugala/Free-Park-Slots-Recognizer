@@ -56,7 +56,7 @@ public class Rectangle {
 			}
 		}
 		
-		if(whitePixels > area/4) {result = false;}
+		if(whitePixels > area/3.5) {result = false;}
 		
 		return result;
 	}

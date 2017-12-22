@@ -1,11 +1,13 @@
 package PrzetwarzanieObrazow;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -225,6 +228,12 @@ public class Windows {
 
 					lblNazwa.setText(nazwa);
 
+					parking = new Parking();
+					houghLines = new Vector<HoughLine>();
+					linesHorizontal = new Vector<HoughLine>();
+					linesVertical = new Vector<HoughLine>();
+					przeciecia = new Vector<Point>();
+					prostokatyVec = new Vector<Rectangle>();
 				}
 			}
 		});
@@ -301,6 +310,13 @@ public class Windows {
 				tymczas = obraz;
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
+				
+				parking = new Parking();
+				houghLines = new Vector<HoughLine>();
+				linesHorizontal = new Vector<HoughLine>();
+				linesVertical = new Vector<HoughLine>();
+				przeciecia = new Vector<Point>();
+				prostokatyVec = new Vector<Rectangle>();
 			}
 		});
 
@@ -550,8 +566,18 @@ public class Windows {
 
 		btnProstokaty.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-						
-				prostokatyVec = parking.prostokaty(linesHorizontal, linesVertical, przeciecia);
+				
+				Vector<Rectangle> prostokatyVecPreFilter = new Vector<Rectangle>();
+				
+				prostokatyVecPreFilter = parking.prostokaty(linesHorizontal, linesVertical, przeciecia);
+				
+				for(Rectangle prostokat : prostokatyVecPreFilter){
+					
+					if(prostokat.area() > w*h/100 ){
+						prostokatyVec.add(prostokat);
+					}
+				}
+				
 		        
 				g.drawImage(tymczas.image, 0, 0, w, h, null);
 				label.setIcon(new ImageIcon(bi));
@@ -564,11 +590,6 @@ public class Windows {
 					g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
 					g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
 				}
-//				g.drawLine((int) prostokaty[2].x1, (int) prostokaty[2].y1, (int) prostokaty[2].x2, (int) prostokaty[2].y2);
-//				g.drawLine((int) prostokaty[2].x1, (int) prostokaty[2].y1, (int) prostokaty[2].x3, (int) prostokaty[2].y3);
-//				g.drawLine((int) prostokaty[2].x2, (int) prostokaty[2].y2, (int) prostokaty[2].x4, (int) prostokaty[2].y4);
-//				g.drawLine((int) prostokaty[2].x4, (int) prostokaty[2].y4, (int) prostokaty[2].x3, (int) prostokaty[2].y3);
-
 			}
 		});
 		
@@ -581,21 +602,23 @@ public class Windows {
 				
 				for(Rectangle prostokat : prostokatyVec){
 					
-					if(prostokat.pusty(tymczas)){		
-						g.setColor(Color.GREEN);
+					if(!prostokat.pusty(tymczas)){		
+						g.setColor(Color.RED);
+						
+		                Graphics2D g2 = (Graphics2D) g;
+		                g2.setStroke(new BasicStroke(5));
+		               // g2.draw(new Line2D.Float(30, 20, 80, 90));
+		                g2.draw(new Line2D.Float((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2));
+		                g2.draw(new Line2D.Float((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3));
+		                g2.draw(new Line2D.Float((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4));
+		                g2.draw(new Line2D.Float((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3));
+				//	g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
+				//	g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
+				//	g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
+				//	g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
+					
 					}
-
-					else{
-						g.setColor(Color.RED);	
-						}
-					
-					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
-					g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
-					g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
-					g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
-					
 				}
-				
 				
 			}
 		});

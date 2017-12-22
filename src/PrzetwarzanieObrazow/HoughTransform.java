@@ -55,7 +55,7 @@ import java.util.Vector;
 
 public class HoughTransform extends Thread {
 	// The size of the neighbourhood in which to search for other local maxima
-	final int neighbourhoodSize = 70;
+	int neighbourhoodSize;
 
 	// How many discrete values of theta shall we check?
 	final int maxTheta = 180;
@@ -86,8 +86,9 @@ public class HoughTransform extends Thread {
 	private double[] sinCache;
 	private double[] cosCache;
 
-	public HoughTransform(BufferedImage image) {
+	public HoughTransform(BufferedImage image, int neightbourhood) {
 		initialise(image.getWidth(), image.getHeight());
+		neighbourhoodSize = neightbourhood;
 		addPoints(image);
 	}
 
@@ -239,7 +240,7 @@ public class HoughTransform extends Thread {
 			}
 		}
 		Collections.sort(lines, Collections.reverseOrder());
-		// lines.setSize(n);
+		//lines.setSize(n);
 
 		return lines;
 	}

@@ -22,16 +22,22 @@ public class Parking {
 		
 		Vector<HoughLine> lines = new Vector<HoughLine>();
 		Vector<HoughLine> linesFiltered = new Vector<HoughLine>();
-			
+		
+		int sasiedztwo = 0;
+		if(w>=h){sasiedztwo = h/30;}
+		else{sasiedztwo = w/30;}
 	
-		HoughTransform ht = new HoughTransform(tymczas.image);
-		lines = ht.getLines(20, 0);
+		HoughTransform ht = new HoughTransform(tymczas.image, sasiedztwo);
+		lines = ht.getLines(50, 0);
 	
 		// filtering
 		for (int y = 0; y < lines.size(); y++) {
-			if (lines.get(y).x1 >= 0  && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {
-				if(lines.get(y).x1 <limitX && lines.get(y).y1 <limitY)
-					{linesFiltered.add(lines.get(y));}
+			if (lines.get(y).x1 >= 0  && lines.get(y).x2 >= 0 && lines.get(y).y1 >= 0 && lines.get(y).y2 >= 0) {//czy nie wychodza poza zakres obrazka
+				if(lines.get(y).x1 <limitX && lines.get(y).y1 <limitY){ //czy nie sa rysowane po krawedzie
+					if(!((Math.abs(lines.get(y).x2-lines.get(y).x1) > w/5) && (Math.abs(lines.get(y).y2-lines.get(y).y1) > h/5))) //czy nie sa ukosne
+					linesFiltered.add(lines.get(y));
+					
+					}
 			}
 		}
 		
@@ -68,7 +74,7 @@ public class Parking {
 	public Vector<Rectangle> prostokaty(Vector<HoughLine> linesHorizontal, Vector<HoughLine> linesVertical, Vector<Point> przeciecia) {
 
 		Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
-		Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())];
+		Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())*2];
 		
 		for(int i=0;i<prostokaty.length;i++){
 			prostokaty[i] = new Rectangle();
@@ -80,6 +86,17 @@ public class Parking {
 			
 				int iterator = (j)+(i*linesVertical.size());
 				int iteratorProstokataNaDole = (j)+((i-1)*linesVertical.size());
+				
+				if(iterator == przeciecia.size()){
+					
+				    for (int i1 = 0; i1 < prostokaty.length; i1++) {
+				    	
+				    	if(prostokaty[i1].x1> 0 && prostokaty[i1].x2> 0 && prostokaty[i1].x3> 0 && prostokaty[i1].x4> 0 )		        	
+				    	prostokatyVec.add(prostokaty[i1]);
+				    }
+					
+					return prostokatyVec;
+				}
 				
 				Point przeciecie = przeciecia.get(iterator);
 				
@@ -177,8 +194,12 @@ public class Parking {
 	                }
 	            }
 	        }
+	        
+	        
 	        for (int i = 0; i < ppoints.length; i++) {
-	            p.add(ppoints[i]);
+	        	if (!p.contains(ppoints[i])){
+	        		p.add(ppoints[i]);	        		
+	        	}
 	        }
 	 
 	        return p;
