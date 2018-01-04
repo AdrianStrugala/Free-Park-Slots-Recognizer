@@ -15,7 +15,7 @@ public class Parking {
 	/*
 	 * LINIE HOUGHA
 	 */
-	Vector<HoughLine> linie(int w, int h, ObrazPanel tymczas){
+	Vector<HoughLine> linie(int w, int h, ObrazPanel tymczas, String sasiedztwoTxt){
 	
 		limitX = w - limitSize;
 		limitY = h - limitSize;
@@ -27,6 +27,8 @@ public class Parking {
 		if(w>=h){sasiedztwo = h/30;}
 		else{sasiedztwo = w/30;}
 	
+		sasiedztwo = Integer.parseInt(sasiedztwoTxt);
+		
 		HoughTransform ht = new HoughTransform(tymczas.image, sasiedztwo);
 		lines = ht.getLines(50, 0);
 	

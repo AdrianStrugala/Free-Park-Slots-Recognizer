@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class Windows {
 
@@ -53,6 +54,7 @@ public class Windows {
 	Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
 	Vector<HoughLine> linesVertical = new Vector<HoughLine>();
 	Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
+	private JTextField txtSasiedztwo;
 	
 
 	/*
@@ -178,6 +180,17 @@ public class Windows {
 		JButton btnParking = new JButton("Parking");
 		btnParking.setBounds(119, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnParking);
+		
+		txtSasiedztwo = new JTextField();
+		txtSasiedztwo.setText("50");
+		txtSasiedztwo.setBounds(133, 362, 86, 20);
+		frmZajebistyProgramGraficzny.getContentPane().add(txtSasiedztwo);
+		txtSasiedztwo.setColumns(10);
+		
+		JLabel lblSasiedztwo = new JLabel("Sasiedztwo:");
+		lblSasiedztwo.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblSasiedztwo.setBounds(141, 342, 89, 23);
+		frmZajebistyProgramGraficzny.getContentPane().add(lblSasiedztwo);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
 
@@ -506,7 +519,7 @@ public class Windows {
 
 				parking.writePixels(w, h, tymczas);
 				
-				houghLines = parking.linie(w, h, tymczas);
+				houghLines = parking.linie(w, h, tymczas, txtSasiedztwo.getText());
 			
 				parking.writeLines(houghLines);
 				
