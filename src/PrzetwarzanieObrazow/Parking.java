@@ -44,95 +44,48 @@ public class Parking {
 		return linesFiltered;
 	}
 	
-	/*
-	 * PRZECIECIA
-	 */
 
-	public Vector<Point> przeciecia(Vector<HoughLine> linesHorizontal, Vector<HoughLine> linesVertical) {
-		
-		Vector<Point> przeciecia = new Vector<Point>();
 	
-		for (int i=0; i<linesHorizontal.size(); i++) {
-			for (int j=0; j<linesVertical.size(); j++)  {
-				
-	
-				Point przeciecie = lineIntersect(linesVertical.get(j).x1, linesVertical.get(j).y1, linesVertical.get(j).x2, linesVertical.get(j).y2,
-						linesHorizontal.get(i).x1, linesHorizontal.get(i).y1, linesHorizontal.get(i).x2, linesHorizontal.get(i).y2);
-				
-//				if(przeciecie.getX() > 0 && przeciecie.getX() < limitX ){
-					przeciecia.add(przeciecie);
-					
-//				}
-					
-			}
-		}
-		przeciecia = sort(przeciecia);
-		
-		return przeciecia;
-	}
-	
-	public Vector<Rectangle> prostokaty(Vector<HoughLine> linesHorizontal, Vector<HoughLine> linesVertical, Vector<Point> przeciecia) {
+	public Vector<Rectangle> prostokaty(Vector<HoughLine> linesHorizontal, Vector<HoughLine> linesVertical) {
 
 		Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
-		Rectangle[] prostokaty = new Rectangle[(linesHorizontal.size())*(linesVertical.size())*2];
 		
-		for(int i=0;i<prostokaty.length;i++){
-			prostokaty[i] = new Rectangle();
-		}
 		
-		for (int i=0; i<linesHorizontal.size(); i++) {
-			for (int j=0; j<linesVertical.size(); j++)  {
+		for (int i=0; i<linesHorizontal.size()-1; i++) {
+			for (int j=0; j<linesVertical.size()-1; j++)  {
 				
-			
-				int iterator = (j)+(i*linesVertical.size());
-				int iteratorProstokataNaDole = (j)+((i-1)*linesVertical.size());
+				Rectangle prostokat = new Rectangle();
 				
-				if(iterator == przeciecia.size()){
-					
-				    for (int i1 = 0; i1 < prostokaty.length; i1++) {
-				    	
-				    	if(prostokaty[i1].x1> 0 && prostokaty[i1].x2> 0 && prostokaty[i1].x3> 0 && prostokaty[i1].x4> 0 )		        	
-				    	prostokatyVec.add(prostokaty[i1]);
-				    }
-					
-					return prostokatyVec;
-				}
+				prostokat.x1 = lineIntersect(linesHorizontal.get(i),linesVertical.get(j)).getX();
+				prostokat.y1 = lineIntersect(linesHorizontal.get(i),linesVertical.get(j)).getY();
 				
-				Point przeciecie = przeciecia.get(iterator);
+				prostokat.x2 = lineIntersect(linesHorizontal.get(i),linesVertical.get(j+1)).getX();
+				prostokat.y2 = lineIntersect(linesHorizontal.get(i),linesVertical.get(j+1)).getY();
 				
-				prostokaty[iterator].x1=przeciecie.getX();
-				prostokaty[iterator].y1=przeciecie.getY();
+				prostokat.x3 = lineIntersect(linesHorizontal.get(i+1),linesVertical.get(j)).getX();
+				prostokat.y3 = lineIntersect(linesHorizontal.get(i+1),linesVertical.get(j)).getY();
 				
-				if(j>0){	
-					prostokaty[iterator-1].x2=przeciecie.getX();
-					prostokaty[iterator-1].y2=przeciecie.getY();
-					
-				}
-					
-				if(i>0){
-						prostokaty[iteratorProstokataNaDole].x3=przeciecie.getX();
-						prostokaty[iteratorProstokataNaDole].y3=przeciecie.getY();
-										
-				}
+				prostokat.x4 = lineIntersect(linesHorizontal.get(i+1),linesVertical.get(j+1)).getX();
+				prostokat.y4 = lineIntersect(linesHorizontal.get(i+1),linesVertical.get(j+1)).getY();
 				
-				if(j>0 && i>0){
-					prostokaty[iteratorProstokataNaDole-1].x4=przeciecie.getX();
-					prostokaty[iteratorProstokataNaDole-1].y4=przeciecie.getY();
-				}
-				
+				prostokatyVec.add (prostokat);
+								
 			}
 		}
-						
-	    for (int i = 0; i < prostokaty.length; i++) {
-	    	
-	    	if(prostokaty[i].x1> 0 && prostokaty[i].x2> 0 && prostokaty[i].x3> 0 && prostokaty[i].x4> 0 )		        	
-	    	prostokatyVec.add(prostokaty[i]);
-	    }
-	    return prostokatyVec;
+		
+		return prostokatyVec;
 	}
 		
-		public static Point lineIntersect(float x1, float y1, float x2, float y2, float x12, float y12, float x22,
-				float y22) {
+		public static Point lineIntersect(HoughLine horizontal, HoughLine vertical){
+			float x1 = vertical.x1;
+			float y1 = vertical.y1;
+			float x2 = vertical.x2;
+			float y2 = vertical.y2;
+			float x12 = horizontal.x1;
+			float y12 = horizontal.y1;
+			float x22 = horizontal.x2;
+			float y22 = horizontal.y2;
+
 			double denom = (y22 - y12) * (x2 - x1) - (x22 - x12) * (y2 - y1);
 			if (denom == 0.0) { // Lines are parallel.
 				return new Point(0, 0);
@@ -170,41 +123,7 @@ public class Parking {
 
 		zapis.close();
 	}
-	 
-		public static Vector<Point> sort(Vector<Point> c) {
-	        Vector<Point> p = new Vector<Point>();
-	        Point[] ppoints = c.toArray(new Point[c.size()]);
-	        Point temp;
-	        int zmiana = 1;
-	        while (zmiana > 0) {
-	            zmiana = 0;
-	            for (int i = 0; i < ppoints.length - 1; i++) {
-	                if (ppoints[i].getY() > ppoints[i + 1].getY()) {
-	                    temp = ppoints[i + 1];
-	                    ppoints[i + 1] = ppoints[i];
-	                    ppoints[i] = temp;
-	                    zmiana++;
-	                }
-	                else if(ppoints[i].getY() == ppoints[i + 1].getY()&& ppoints[i].getX() > ppoints[i + 1].getX())
-	                {
-	                    temp = ppoints[i + 1];
-	                    ppoints[i + 1] = ppoints[i];
-	                    ppoints[i] = temp;
-	                    zmiana++;
-	                }
-	            }
-	        }
-	        
-	        
-	        for (int i = 0; i < ppoints.length; i++) {
-	        	if (!p.contains(ppoints[i])){
-	        		p.add(ppoints[i]);	        		
-	        	}
-	        }
-	 
-	        return p;
-	 
-	    }
+	
 
 	void writePixels(int w, int h, ObrazPanel tymczas) {
 		int[][] table = new int[w][h];
@@ -233,26 +152,6 @@ public class Parking {
 		zapis.close();
 		
 	}
-	
-	void writePrzeciecia(Vector<Point> przeciecia) {
-		PrintWriter zapis = null;
-
-		try {
-			zapis = new PrintWriter("przeciecia.txt");
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		for (Point przeciecie : przeciecia) {
-			zapis.print(przeciecie.x + " " + przeciecie.y);
-			zapis.print("\n");
-		}
-
-		zapis.close();
-		
-	}
-
-
 
 	
 }

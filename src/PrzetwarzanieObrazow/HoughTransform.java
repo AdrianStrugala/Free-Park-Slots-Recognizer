@@ -239,7 +239,7 @@ public class HoughTransform extends Thread {
 				}
 			}
 		}
-		Collections.sort(lines, Collections.reverseOrder());
+		Collections.sort(lines);
 		//lines.setSize(n);
 
 		return lines;

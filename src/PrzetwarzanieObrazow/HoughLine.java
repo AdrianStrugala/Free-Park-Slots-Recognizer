@@ -60,6 +60,7 @@ public HoughLine(double theta, double r, int width, int height, int score) {
 }
 
 public int compareTo(HoughLine o) {
-  return(this.score-o.score);
+	return (int) (this.getX1() - o.getX1());
+  //return(this.score-o.score);
 }
 } 

@@ -52,7 +52,6 @@ public class Windows {
 	Vector<HoughLine> houghLines = new Vector<HoughLine>();
 	Vector<HoughLine> linesHorizontal = new Vector<HoughLine>();
 	Vector<HoughLine> linesVertical = new Vector<HoughLine>();
-	Vector<Point> przeciecia = new Vector<Point>();
 	Vector<Rectangle> prostokatyVec = new Vector<Rectangle>();
 	
 
@@ -167,21 +166,17 @@ public class Windows {
 		JButton btnHough = new JButton("Hough");
 		btnHough.setBounds(119, 218, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnHough);
-
-		JButton btnPunkty = new JButton("Punkty");
-		btnPunkty.setBounds(120, 258, 100, 29);
-		frmZajebistyProgramGraficzny.getContentPane().add(btnPunkty);
 		
 		JButton btnPogrub = new JButton("Pogrub");
 		btnPogrub.setBounds(119, 180, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnPogrub);
 		
 		JButton btnProstokaty = new JButton("Prostokaty");
-		btnProstokaty.setBounds(119, 298, 100, 29);
+		btnProstokaty.setBounds(120, 258, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnProstokaty);
 		
 		JButton btnParking = new JButton("Parking");
-		btnParking.setBounds(119, 340, 100, 29);
+		btnParking.setBounds(119, 298, 100, 29);
 		frmZajebistyProgramGraficzny.getContentPane().add(btnParking);
 		// Image img = new
 		// ImageIcon(this.getClass().getResource("tymczas.jpg")).getImage();
@@ -232,7 +227,6 @@ public class Windows {
 					houghLines = new Vector<HoughLine>();
 					linesHorizontal = new Vector<HoughLine>();
 					linesVertical = new Vector<HoughLine>();
-					przeciecia = new Vector<Point>();
 					prostokatyVec = new Vector<Rectangle>();
 				}
 			}
@@ -315,7 +309,6 @@ public class Windows {
 				houghLines = new Vector<HoughLine>();
 				linesHorizontal = new Vector<HoughLine>();
 				linesVertical = new Vector<HoughLine>();
-				przeciecia = new Vector<Point>();
 				prostokatyVec = new Vector<Rectangle>();
 			}
 		});
@@ -529,9 +522,11 @@ public class Windows {
 
 			}
 		});
-
-		btnPunkty.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		/*
+		 * PROSOTKATY
+		 */
+		btnProstokaty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				
 				// get Horizontal
 				for (int y = 0; y < houghLines.size(); y++) {
@@ -548,30 +543,11 @@ public class Windows {
 					}
 				}
 				
-				przeciecia = parking.przeciecia(linesHorizontal, linesVertical);
-	
-				parking.writePrzeciecia(przeciecia);			
-			
-				g.drawImage(tymczas.image, 0, 0, w, h, null);
-				label.setIcon(new ImageIcon(bi));
-
-				g.setColor(Color.GREEN);
-				for (Point przeciecie : przeciecia) {
-					g.fillRect(przeciecie.x, przeciecie.y, 5, 5);
-				}
+				Vector<Rectangle> prostokaty = new Vector<Rectangle>();
 				
-
-			}
-		});
-
-		btnProstokaty.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+				prostokaty = parking.prostokaty(linesHorizontal, linesVertical);
 				
-				Vector<Rectangle> prostokatyVecPreFilter = new Vector<Rectangle>();
-				
-				prostokatyVecPreFilter = parking.prostokaty(linesHorizontal, linesVertical, przeciecia);
-				
-				for(Rectangle prostokat : prostokatyVecPreFilter){
+				for(Rectangle prostokat : prostokaty){
 					
 					if(prostokat.area() > w*h/100 ){
 						prostokatyVec.add(prostokat);
@@ -593,6 +569,9 @@ public class Windows {
 			}
 		});
 		
+		/*
+		 * ZNAJDOWANIE WOLNYCH MIEJSC PARKINGOWYCH
+		 */
 		btnParking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -607,15 +586,11 @@ public class Windows {
 						
 		                Graphics2D g2 = (Graphics2D) g;
 		                g2.setStroke(new BasicStroke(5));
-		               // g2.draw(new Line2D.Float(30, 20, 80, 90));
 		                g2.draw(new Line2D.Float((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2));
 		                g2.draw(new Line2D.Float((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3));
 		                g2.draw(new Line2D.Float((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4));
 		                g2.draw(new Line2D.Float((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3));
-				//	g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x2, (int) prostokat.y2);
-				//	g.drawLine((int) prostokat.x1, (int) prostokat.y1, (int) prostokat.x3, (int) prostokat.y3);
-				//	g.drawLine((int) prostokat.x2, (int) prostokat.y2, (int) prostokat.x4, (int) prostokat.y4);
-				//	g.drawLine((int) prostokat.x4, (int) prostokat.y4, (int) prostokat.x3, (int) prostokat.y3);
+
 					
 					}
 				}
